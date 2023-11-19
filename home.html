@@ -74,6 +74,7 @@
                   {% endfor %}
                 </tbody>
               </table>
+              
             </div>
           </div>
 
@@ -127,6 +128,8 @@
                 loadTopShooters(teamName); // Nouvelle fonction pour charger la liste des top tireurs
                 loadTopShooters(teamName);
                 loadSituationsPieChart(teamName);
+                generatePieChart('table-situations', teamName);  // Appel de la fonction avec le nom de l'équipe
+
             });
         });
 
@@ -140,6 +143,29 @@
                 }
             });
         }
+        
+        function filterSituationsByTeam(teamName) {
+            // Filtrer les lignes du tableau des situations
+            var situationRows = document.querySelectorAll('.table-situations tbody tr');
+            situationRows.forEach(function(row) {
+                if (row.classList.contains('team-' + teamName)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            // Filtrer les éléments du Pie Chart (en supposant que le Pie Chart soit directement généré dans la même div)
+            var pieChartSections = document.querySelectorAll('#situations-pie-chart-section');
+            pieChartSections.forEach(function(section) {
+                if (section.classList.contains('team-' + teamName)) {
+                    section.style.display = '';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+        }
+    
 
         function loadShotmap(teamName) {
             var shotmapSection = document.getElementById('shotmap-section');
@@ -166,38 +192,41 @@
           var situationsPieChartSection = document.getElementById('situations-pie-chart-section');
 
         }
+
+        function generatePieChart(tableClass, teamName) {
+          var tableRows = document.querySelectorAll('.' + tableClass + ' tbody tr');
+          var labels = [];
+          var values = [];
+          //var hover_data = [];
+
+          // Parcourir les lignes du tableau
+          tableRows.forEach(function(row) {
+              var cells = row.cells;
+              // Utiliser les données appropriées des colonnes
+              var label = cells[1].textContent;  // Colonne "Situation"
+              var value = parseFloat(cells[2].textContent);  // Colonne "Tirs"
+              //var hover_data = parseFloat(cells[3].textContent);
+
+
+              // Ajouter les données aux tableaux de labels et de values
+              labels.push(label);
+              values.push(value);
+              //hover_data.push(hover_data);
+          });
+
+          // Utiliser Plotly Express pour créer le pie chart
+          var data = [{ labels: labels, values: values, type: 'pie' }];
+          var layout = {title: `Pie Chart - ${teamName}`};  // Titre dynamique avec le nom de l'équipe
+          Plotly.newPlot('situations-pie-chart-section', data,layout);
+        }
+
+      // Exemple d'utilisation
+      //generatePieChart('table-situations', teamName);
+
+      // Appeler la fonction de génération du Pie Chart au chargement de la page
+      //document.addEventListener('DOMContentLoaded', generatePieChart);
     });
   </script>
 
-<script>
-  // Fonction pour générer le Pie Chart directement depuis le tableau
-  function generatePieChart(tableClass) {
-      var tableRows = document.querySelectorAll('.' + tableClass + ' tbody tr');
-      var labels = [];
-      var values = [];
-
-      // Parcourir les lignes du tableau
-      tableRows.forEach(function(row) {
-          var cells = row.cells;
-          // Utiliser les données appropriées des colonnes
-          var label = cells[1].textContent;  // Colonne "Joueur"
-          var value = parseFloat(cells[2].textContent);  // Colonne "Tirs"
-
-          // Ajouter les données aux tableaux de labels et de values
-          labels.push(label);
-          values.push(value);
-      });
-
-      // Utiliser Plotly Express pour créer le pie chart
-      var data = [{ labels: labels, values: values, type: 'pie' }];
-      Plotly.newPlot('situations-pie-chart-section', data);
-  }
-
-  // Exemple d'utilisation
-  generatePieChart('table-situations');
-
-  // Appeler la fonction de génération du Pie Chart au chargement de la page
-  document.addEventListener('DOMContentLoaded', generatePieChart);
-</script>
 
 {% endblock %}
