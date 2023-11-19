@@ -1,0 +1,51 @@
+
+<script>
+  function loadData() {
+    fetch('/Users/Personnel/Flaskl1')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        // Process the data
+        console.log(data);
+      })
+      .catch(error => {
+        console.error('Error fetching data:', error);
+      });
+    }
+  </script>
+
+// Filter the data for the selected team
+          var teamData = Situations[Situations['Team'] == teamName];
+
+          // Check the console to ensure that the data is being retrieved correctly
+          console.log(teamData);
+
+          // Check if there is data for the selected team
+          if (teamData.length === 0) {
+              console.error('No data found for the selected team.');
+              return;
+          }
+
+          // Extract labels and values from the data
+          var labels = teamData['Situation'];
+          var values = teamData['Shots'];
+
+          // Check the console to ensure that labels and values are correctly extracted
+          console.log(labels, values);
+
+          // Create the data array for Plotly
+          var data = [{
+              labels: labels,
+              values: values,
+              type: 'pie'
+          }];
+
+          // Check the console to ensure that the data array is correctly formatted
+          console.log(data);
+
+          // Use Plotly Express to create the pie chart
+          Plotly.newPlot(situationsPieChartSection, data);
