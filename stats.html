@@ -1,0 +1,316 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<style>
+  .item1 { grid-area: header; }
+  .item2 { grid-area: liste_équipes; }
+  .item3 { grid-area: shotmap; }
+  .item4 { grid-area: piechart; }
+  .item5 { grid-area: situations; }
+  .item6 { grid-area: tireurs; }
+  
+  
+  .grid-container {
+    display: grid;
+    grid-template-areas:
+      'header header header header header'
+      'liste_équipes shotmap shotmap piechart piechart'
+      'liste_équipes shotmap shotmap piechart piechart'
+      'liste_équipes tireurs tireurs piechart piechart'
+      'liste_équipes tireurs tireurs piechart piechart'
+      'liste_équipes tireurs tireurs situations situations'
+      'liste_équipes tireurs tireurs situations situations';
+  
+    gap: 10px;
+    background-color: #2196F3;
+    padding: 10px;
+  }
+  
+  .grid-container > div {
+    background-color: rgba(255, 255, 255, 0.8);
+    text-align: center;
+    padding: 20px 0;
+    font-size: 30px;
+  }
+</style>
+
+  <div class="container-fluid custom-container">
+    <div class="row custom-row">
+      <nav class="col-md-2 d-none d-md-block sidebar">
+        <div class="alert custom-alert" role="alert">
+          CHOISIS UNE EQUIPE
+        </div>
+        <div class="sidebar-sticky">
+          <div class="list-group">
+            {% for team in teams %}
+              <div key="{{ team.id }}" class = "team-button-container">
+                <button
+                  type="button"
+                  class="list-group-item list-group-item-action team-button"
+                  data-team-id="{{ team.id }}">
+                  <img src="{{ url_for('static', filename='logos/' + team.logo) }}" alt="{{ team.name }} logo" class="team-logo">
+                  {{ team.name }}
+                </button>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </nav>
+
+      <!-- Contenu principal avec shotmap et liste des joueurs -->
+      <main role="main" class="col-md-10">
+        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2">Stats de l'équipe sélectionnée </h1>
+        </div>
+
+        <div class="row"> 
+          <div class="col-md-6">
+
+            <!-- Grille Bootstrap pour mettre le shotmap et la liste des joueurs côte à côte -->
+            <div class="card custom-card">
+              <div class="card-header">
+                <h2>Shotmap</h2>
+              </div>
+              <div class = "card-body">
+                <div id="shotmap-section" class="mt-4"> <p>Mapping complet des Tirs et des Buts par Equipe</p></div>
+              </div>              
+            </div>
+          </div>
+
+          <div class="col-md-6">
+
+            <div class = "card custom-card"> 
+              <div class="card-header">
+                <!-- Section pour afficher le Piechart -->
+                <h2>Pie Chart</h2>
+              </div>
+              <div class = "card-body">
+                <div id="situations-pie-chart-section" class="mt-4">
+                  <div id="pie-chart-container"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <!-- Section pour afficher les situations -->
+            <div id="situations-list-section" class="mt-4 situations-list-section">
+              <h2>Situations de tirs</h2>
+              <table class="table table-transparent table-hover table-custom table-situations">
+                <thead>
+                  <tr>
+                    <th scope="col">Equipe</th>
+                    <th scope="col">Situation</th>
+                    <th scope="col">Tirs</th>
+                    <th scope="col">Buts</th>
+                    <th scope="col">xG</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for index, row in Situations.iterrows() %}
+                    <tr class="team-{{ row['Team'] }}">
+                      <td>{{ row['Team'] }}</td>
+                      <td>{{ row['Situation'] }}</td>
+                      <td>{{ row['Shots'] }}</td>
+                      <td>{{ row['Goals'] }}</td>
+                      <td>{{ row['xG'] }}</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+              
+            </div>
+          </div>
+        
+          <div class="col-md-6">
+            <!-- Section pour afficher la liste des meilleurs tireurs -->
+            <div id="top-shooters-section" class="mt-4">
+              <h2>Top Tireurs</h2>
+              <table class="table table-transparent table-hover table-custom table-shots">
+                <thead>
+                  <tr>
+                    <th scope="col">Joueur</th>
+                    <th scope="col">Equipe</th>
+                    <th scope="col">Tirs</th>
+                    <th scope="col">Buts</th>
+                    <th scope="col">xG</th>
+                    <th scope="col">G-xG</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for index, row in players_shots.iterrows() %}
+                    <tr class="team-{{ row['Team'] }}">
+                      <td>{{ row['Player Name'] }}</td>
+                      <td>{{ row['Team'] }}</td>
+                      <td>{{ row['Shots'] }}</td>
+                      <td>{{ row['Goals'] }}</td>
+                      <td>{{ row['xG'] }}</td>
+                      <td>{{ row['G - xG'] }}</td>
+                    </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div>
+            <h2>Positions Moyennes</h2>
+            <div id="avg_pos-section" class="mt-4">
+          </div>
+
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        var teamButtons = document.querySelectorAll('.team-button');
+        teamButtons.forEach(function(button) {
+            button.addEventListener('click', function() {
+                teamButtons.forEach(function(b) {
+                    b.classList.remove('active');
+                });
+                button.classList.add('active');
+                // Chargez le shotmap et la liste des top tireurs correspondants à l'équipe sélectionnée
+                var teamName = button.textContent.trim();
+                loadShotmap(teamName);
+                loadTopShooters(teamName); // Nouvelle fonction pour charger la liste des top tireurs
+                loadTopShooters(teamName);
+                loadSituationsPieChart(teamName);
+                generatePieChart('table-situations', teamName);  // Appel de la fonction avec le nom de l'équipe
+                loadAvgPos(teamName);
+
+            });
+        });
+
+        function filterPlayersByTeam(teamName) {
+            var playerRows = document.querySelectorAll('.table tbody tr');
+            playerRows.forEach(function(row) {
+                if (row.classList.contains('team-' + teamName)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        }
+        
+        function filterSituationsByTeam(teamName) {
+            // Filtrer les lignes du tableau des situations
+            var situationRows = document.querySelectorAll('.table-situations tbody tr');
+            situationRows.forEach(function(row) {
+                if (row.classList.contains('team-' + teamName)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            // Filtrer les éléments du Pie Chart (en supposant que le Pie Chart soit directement généré dans la même div)
+            var pieChartSections = document.querySelectorAll('#situations-pie-chart-section');
+            pieChartSections.forEach(function(section) {
+                if (section.classList.contains('team-' + teamName)) {
+                    section.style.display = '';
+                } else {
+                    section.style.display = 'none';
+                }
+            });
+        }
+    
+
+        function loadShotmap(teamName) {
+            var shotmapSection = document.getElementById('shotmap-section');
+            shotmapSection.innerHTML = '<img class="shotmap-image" src="/static/shotmaps/' + teamName + '_shotmap.png" alt="Shotmap">';
+            filterPlayersByTeam(teamName);
+        }
+
+        function loadTopShooters(teamName) {
+            // Nouvelle fonction pour charger la liste des top tireurs
+            var topShootersSection = document.getElementById('top-shooters-section');
+            // Implémentez le code pour charger la liste des top tireurs depuis votre fichier CSV
+            // Utilisez par exemple une librairie JavaScript pour le traitement CSV ou faites une requête AJAX si c'est plus approprié dans votre cas
+            // Assurez-vous de mettre à jour le contenu de topShootersSection avec les données chargées
+        }
+
+        function loadSituations(teamName) {
+            // Nouvelle fonction pour charger la liste des situations
+            var situationsListSection = document.getElementById('situations-list-section');
+            // Implémentez le code pour charger la liste des situations depuis votre fichier CSV situations.csv
+            // Assurez-vous de mettre à jour le contenu de situationsListSection avec les données chargées
+        }
+
+        function loadAvgPos(teamName) {
+            var avgPosSection = document.getElementById('avg-pos-section');
+            avgPosSection.innerHTML = '<img class="avg_pos-image" src="/static/avg_pos/' + teamName + '_avg_pos.png" alt="avg_pos">';
+            filterPlayersByTeam(teamName);
+        }
+
+        function loadSituationsPieChart(teamName) {
+          var situationsPieChartSection = document.getElementById('situations-pie-chart-section');
+
+        }
+
+        function generatePieChart(tableClass, teamName) {
+            
+          var tableRows = document.querySelectorAll('.' + tableClass + ' tbody tr');
+          var labels = [];
+          var values = [];
+          //var hover_data = [];
+
+          // Parcourir les lignes du tableau
+          tableRows.forEach(function (row) {
+              var cells = row.cells;
+              var rowTeamName = cells[0].textContent;  // Colonne "Equipe"
+              
+              // Ajouter une condition pour inclure le total général uniquement lorsque teamName est vide
+              if (!teamName || rowTeamName === teamName) {
+                  // Utiliser les données appropriées des colonnes
+                  var label = cells[1].textContent;  // Colonne "Situation"
+                  var value = parseFloat(cells[2].textContent);  // Colonne "Tirs"
+
+                  // Ajouter les données aux tableaux de labels et de values
+                  labels.push(label);
+                  values.push(value);
+              }
+          });
+
+          var data = [{
+          labels: labels,
+          values: values,
+          type: 'pie',
+          hole: 0.3,  // Taille du trou pour créer le donut
+          marker: {
+            colors: ['#b7c2cf','#7188a0', '#244460', '#151f28' , '#0c1e29', '#292929' ,'#000'],  // Couleurs des tranches du donut
+            line: {
+              color: '#ffffff',  // Couleur de la bordure des tranches
+              width: 2.5  // Largeur de la bordure des tranches
+            },
+          }
+        }];
+
+        var layout = {
+        //title: `Occasions - ${teamName}`,  // Titre dynamique avec le nom de l'équipe
+          paper_bgcolor: 'transparent',
+          margin: {
+            t:0,
+            b:0
+          },
+          legend:{
+            orientation:'h',
+            y:1,
+          }
+        };
+
+        Plotly.newPlot('situations-pie-chart-section', data, layout);
+        }
+
+      // Exemple d'utilisation
+      //generatePieChart('table-situations', teamName);
+
+      // Appeler la fonction de génération du Pie Chart au chargement de la page
+      //document.addEventListener('DOMContentLoaded', generatePieChart);
+    });
+  </script>
+
+
+{% endblock %}

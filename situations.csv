@@ -13,7 +13,7 @@ Clermont,free-kick,4,0,0.25
 Clermont,penalty,2,1,1.58
 Clermont,regular,20,1,2.04
 Clermont,set-piece,8,1,1.09
-Clermont,throw-in-set-piece,3,0,0.09
+Clermont,throw-in,3,0,0.09
 LeHavre,assisted,58,8,5.65
 LeHavre,corner,19,0,1.6
 LeHavre,fast-break,4,0,0.29
@@ -65,7 +65,7 @@ Monaco,free-kick,3,0,0.13
 Monaco,penalty,2,0,1.58
 Monaco,regular,15,3,2.04
 Monaco,set-piece,5,0,0.42
-Monaco,throw-in-set-piece,3,1,0.13
+Monaco,throw-in,3,1,0.13
 Montpellier,assisted,56,6,4.78
 Montpellier,corner,16,2,1.64
 Montpellier,fast-break,15,5,4.59
@@ -73,7 +73,7 @@ Montpellier,free-kick,7,0,0.24
 Montpellier,penalty,1,1,0.79
 Montpellier,regular,22,2,2.44
 Montpellier,set-piece,16,1,1.39
-Montpellier,throw-in-set-piece,1,0,0.02
+Montpellier,throw-in,1,0,0.02
 Nantes,assisted,63,4,5.68
 Nantes,corner,11,2,0.64
 Nantes,fast-break,2,1,0.73
@@ -81,7 +81,7 @@ Nantes,free-kick,7,1,0.36
 Nantes,penalty,3,3,2.37
 Nantes,regular,24,4,2.37
 Nantes,set-piece,3,0,0.28
-Nantes,throw-in-set-piece,1,1,0.08
+Nantes,throw-in,1,1,0.08
 Nice,assisted,75,5,7.8
 Nice,corner,21,1,1.65
 Nice,fast-break,4,2,0.84
@@ -110,14 +110,14 @@ Rennes,free-kick,7,0,0.34
 Rennes,penalty,3,3,2.37
 Rennes,regular,25,7,4.15
 Rennes,set-piece,7,1,1.6
-Rennes,throw-in-set-piece,2,0,0.1
+Rennes,throw-in,2,0,0.1
 Strasbourg,assisted,47,4,6.42
 Strasbourg,corner,7,0,0.3
 Strasbourg,fast-break,6,1,1.24
 Strasbourg,free-kick,3,1,0.1
 Strasbourg,regular,12,3,2.34
 Strasbourg,set-piece,5,0,0.42
-Strasbourg,throw-in-set-piece,3,0,0.08
+Strasbourg,throw-in,3,0,0.08
 Toulouse,assisted,60,7,5.42
 Toulouse,corner,12,1,1.03
 Toulouse,fast-break,6,1,0.51

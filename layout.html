@@ -10,35 +10,7 @@
     <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='main.css') }}">
     
     <title>{% block title %}Accueil{% endblock %}</title>
-    <style>
-        .table-transparent tbody tr td {
-          background-color: transparent !important;
-        }
-    </style>
-    <style>
-        .table-custom thead th {
-            background-color: #0c1e29; /* Remplacez cette couleur par celle que vous souhaitez */
-            color: white; /* Couleur du texte dans l'en-tête */
-        }
-    </style>
-    <style>
-        .table-custom thead th:nth-child(2),
-        .table-custom tbody td:nth-child(2) {
-            width: 200px; /* Remplacez la largeur par celle que vous souhaitez */
-        }
-
-        
-    </style>
-    <style>
-        .navbar-nav.ml-auto .nav-item {
-            margin-left: 800px; /* Adjust this value as needed */
-        }
-    </style>
-    <style>
-        .custom-bold {
-            font-weight: bold;
-        }
-    </style> 
+    
 </head>
 <body>
 
@@ -54,6 +26,9 @@
             <div class="collapse navbar-collapse" id="navbarToggle">
                 <div class="navbar-nav">
                     <a class="nav-item nav-link custom-bold" href="{{ url_for('home') }}">FootBull Republic</a>
+                </div>
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link" href="{{ url_for('stats') }}">Stats</a>
                 </div>
                 <div class="navbar-nav ml-auto nav-item">
                     <a class="nav-item nav-link" href="{{ url_for('home') }}">Home</a>
