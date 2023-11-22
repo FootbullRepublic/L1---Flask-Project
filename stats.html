@@ -2,101 +2,129 @@
 
 {% block content %}
 
-<style>
-  .item1 { grid-area: header; }
-  .item2 { grid-area: liste_équipes; }
-  .item3 { grid-area: shotmap; }
-  .item4 { grid-area: piechart; }
-  .item5 { grid-area: situations; }
-  .item6 { grid-area: tireurs; }
-  
-  
+  <style>
+    .item1 { grid-area: header; }
+    .item2 { grid-area: liste_équipes; }
+    .item3 { grid-area: shotmap; }
+    .item4 { grid-area: piechart; }
+    .item5 { grid-area: situations;}
+    .item6 { grid-area: tireurs;}    
+    .itrm7 { grid-area: logo}
+    
+
+  .item1{
+    grid-row: 1 / 2;
+    grid-column: 1 / 7;
+  }
+
+  .item2{
+    grid-area: 2 / 1 / 7 / 2;
+  }
+
+  .item3 {
+    grid-area: 2 / 3 / 4 / 6;
+  }
+
+  .item4 {
+
+    grid-area: 7 / 3;
+    width: 550px;
+    height: auto; /* Hauteur fixe pour item4 */
+    max-width: 100%;
+    padding: 50px;
+  }
+
+  .item5 {
+    grid-area: 3 / 9;
+    width: 100%; /* Remplissez la largeur disponible */
+    height: auto;
+  }
+
+  .item6 {
+    grid-area: 7/ 9;
+    width: 100%; /* Remplissez la largeur disponible */
+    height: auto;
+  }
+
+
   .grid-container {
     display: grid;
-    grid-template-areas:
-      'header header header header header'
-      'liste_équipes shotmap shotmap piechart piechart'
-      'liste_équipes shotmap shotmap piechart piechart'
-      'liste_équipes tireurs tireurs piechart piechart'
-      'liste_équipes tireurs tireurs piechart piechart'
-      'liste_équipes tireurs tireurs situations situations'
-      'liste_équipes tireurs tireurs situations situations';
-  
-    gap: 10px;
-    background-color: #2196F3;
-    padding: 10px;
+    grid-template-rows:100px 50px 100px 100px 100px 200px 100px 100px;
+    grid-template-columns:100px 100px 100px 100px 100px 100px 100px 70px 100px;
+    gap: 0x;
+    background-color: transparent;
+    padding: 50px;
   }
-  
+
   .grid-container > div {
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: transparent;
     text-align: center;
-    padding: 20px 0;
-    font-size: 30px;
+    padding: 10px;
+    font-size: 15px;
   }
-</style>
+
+  </style>
 
   <div class="container-fluid custom-container">
-    <div class="row custom-row">
-      <nav class="col-md-2 d-none d-md-block sidebar">
-        <div class="alert custom-alert" role="alert">
-          CHOISIS UNE EQUIPE
-        </div>
-        <div class="sidebar-sticky">
-          <div class="list-group">
-            {% for team in teams %}
-              <div key="{{ team.id }}" class = "team-button-container">
-                <button
-                  type="button"
-                  class="list-group-item list-group-item-action team-button"
-                  data-team-id="{{ team.id }}">
-                  <img src="{{ url_for('static', filename='logos/' + team.logo) }}" alt="{{ team.name }} logo" class="team-logo">
-                  {{ team.name }}
-                </button>
-              </div>
-            {% endfor %}
+    <div class="grid-container">
+      <div class="item1">
+        <h1>Stats de l'équipe sélectionnée</h1>
+      </div>
+
+      <div class="item2">
+        <nav class="col-md-2 d-none d-md-block sidebar">
+          <div class="alert custom-alert" role="alert">
+            CHOISIS UNE EQUIPE
           </div>
-        </div>
-      </nav>
-
-      <!-- Contenu principal avec shotmap et liste des joueurs -->
-      <main role="main" class="col-md-10">
-        <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-          <h1 class="h2">Stats de l'équipe sélectionnée </h1>
-        </div>
-
-        <div class="row"> 
-          <div class="col-md-6">
-
-            <!-- Grille Bootstrap pour mettre le shotmap et la liste des joueurs côte à côte -->
-            <div class="card custom-card">
-              <div class="card-header">
-                <h2>Shotmap</h2>
-              </div>
-              <div class = "card-body">
-                <div id="shotmap-section" class="mt-4"> <p>Mapping complet des Tirs et des Buts par Equipe</p></div>
-              </div>              
-            </div>
-          </div>
-
-          <div class="col-md-6">
-
-            <div class = "card custom-card"> 
-              <div class="card-header">
-                <!-- Section pour afficher le Piechart -->
-                <h2>Pie Chart</h2>
-              </div>
-              <div class = "card-body">
-                <div id="situations-pie-chart-section" class="mt-4">
-                  <div id="pie-chart-container"></div>
+          <div class="sidebar-sticky">
+            <div class="list-group">
+              {% for team in teams %}
+                <div key="{{ team.id }}" class = "team-button-container">
+                  <button
+                    type="button"
+                    class="list-group-item list-group-item-action team-button"
+                    data-team-id="{{ team.id }}">
+                    <img src="{{ url_for('static', filename='logos/' + team.logo) }}" alt="{{ team.name }} logo" class="team-logo">
+                    {{ team.name }}
+                  </button>
                 </div>
-              </div>
+              {% endfor %}
             </div>
           </div>
+        </nav>
+      </div>
 
-          <div class="col-md-6">
-            <!-- Section pour afficher les situations -->
-            <div id="situations-list-section" class="mt-4 situations-list-section">
-              <h2>Situations de tirs</h2>
+      <div class="item3">
+        <div class="card custom-card">
+          <div class="card-header">
+            <h2>Shotmap</h2>
+          </div>
+          <div class = "card-body">
+            <div id="shotmap-section" class="mt-4"> <p>Mapping complet des Tirs et des Buts par Equipe</p></div>
+          </div>              
+        </div>
+      </div>
+
+      <div class="item4">
+        <div class = "card custom-card"> 
+          <div class="card-header">
+            <!-- Section pour afficher le Piechart -->
+            <h2>Pie Chart</h2>
+          </div>
+          <div class = "card-body">
+            <div id="situations-pie-chart-section" class="mt-4">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="item5">
+        <div class="card custom-card mt-4"> 
+          <div class="card-header">
+            <h2> Situations </h2>
+          </div>
+          <div class="card-body">
+            <div id="situations-list-section mt-4">
               <table class="table table-transparent table-hover table-custom table-situations">
                 <thead>
                   <tr>
@@ -119,48 +147,53 @@
                   {% endfor %}
                 </tbody>
               </table>
-              
             </div>
           </div>
-        
-          <div class="col-md-6">
-            <!-- Section pour afficher la liste des meilleurs tireurs -->
-            <div id="top-shooters-section" class="mt-4">
-              <h2>Top Tireurs</h2>
-              <table class="table table-transparent table-hover table-custom table-shots">
-                <thead>
-                  <tr>
-                    <th scope="col">Joueur</th>
-                    <th scope="col">Equipe</th>
-                    <th scope="col">Tirs</th>
-                    <th scope="col">Buts</th>
-                    <th scope="col">xG</th>
-                    <th scope="col">G-xG</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {% for index, row in players_shots.iterrows() %}
-                    <tr class="team-{{ row['Team'] }}">
-                      <td>{{ row['Player Name'] }}</td>
-                      <td>{{ row['Team'] }}</td>
-                      <td>{{ row['Shots'] }}</td>
-                      <td>{{ row['Goals'] }}</td>
-                      <td>{{ row['xG'] }}</td>
-                      <td>{{ row['G - xG'] }}</td>
-                    </tr>
-                  {% endfor %}
-                </tbody>
-              </table>
-            </div>
-          </div>
-          <div>
-            <h2>Positions Moyennes</h2>
-            <div id="avg_pos-section" class="mt-4">
-          </div>
-
         </div>
-      </main>
+      </div>
+          
+      <div class="item6">
+        <div class="card custom-card mt-4"> <!-- Supprimez la classe redondante ici -->
+          <div class="card-header">
+            <h2>Top Tireurs</h2>
+          </div>
+          <div class = "card-body">
+            <table class="table table-transparent table-hover table-custom table-shots">
+              <thead>
+                <tr>
+                  <th scope="col">Joueur</th>
+                  <th scope="col">Equipe</th>
+                  <th scope="col">Tirs</th>
+                  <th scope="col">Buts</th>
+                  <th scope="col">xG</th>
+                  <th scope="col">G-xG</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for index, row in players_shots.iterrows() %}
+                  <tr class="team-{{ row['Team'] }}">
+                    <td>{{ row['Player Name'] }}</td>
+                    <td>{{ row['Team'] }}</td>
+                    <td>{{ row['Shots'] }}</td>
+                    <td>{{ row['Goals'] }}</td>
+                    <td>{{ row['xG'] }}</td>
+                    <td>{{ row['G - xG'] }}</td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          
+        </div>
+      </div>
+
+      <div class="item7">
+        <div id="logo-section">
+        </div>
+      </div>
+
     </div>
+
   </div>
 
   <script>
@@ -180,6 +213,7 @@
                 loadSituationsPieChart(teamName);
                 generatePieChart('table-situations', teamName);  // Appel de la fonction avec le nom de l'équipe
                 loadAvgPos(teamName);
+                loadLogo(teamName);
 
             });
         });
@@ -221,6 +255,12 @@
         function loadShotmap(teamName) {
             var shotmapSection = document.getElementById('shotmap-section');
             shotmapSection.innerHTML = '<img class="shotmap-image" src="/static/shotmaps/' + teamName + '_shotmap.png" alt="Shotmap">';
+            filterPlayersByTeam(teamName);
+        }
+
+        function loadLogo(teamName) {
+            var logoSection = document.getElementById('logo-section');
+            logoSection.innerHTML = '<img class="logo-image" src="/static/logos/' + teamName + '.png" alt="logo">';
             filterPlayersByTeam(teamName);
         }
 
@@ -273,20 +313,27 @@
                   values.push(value);
               }
           });
-
-          var data = [{
-          labels: labels,
-          values: values,
-          type: 'pie',
-          hole: 0.3,  // Taille du trou pour créer le donut
-          marker: {
-            colors: ['#b7c2cf','#7188a0', '#244460', '#151f28' , '#0c1e29', '#292929' ,'#000'],  // Couleurs des tranches du donut
-            line: {
-              color: '#ffffff',  // Couleur de la bordure des tranches
-              width: 2.5  // Largeur de la bordure des tranches
-            },
+          if (labels.length === 0) 
+          {
+            // Aucune équipe sélectionnée, afficher le paragraphe
+            situationsPieChartSection = '<p>Répartition des situations d\'occasions</p>';
           }
-        }];
+          else {
+            var data = 
+            [{
+              labels: labels,
+              values: values,
+              type: 'pie',
+              hole: 0.3,  // Taille du trou pour créer le donut
+              marker: {
+                colors: ['#b7c2cf','#7188a0', '#244460', '#151f28' , '#0c1e29', '#292929' ,'#000'],  // Couleurs des tranches du donut
+                line: {
+                  color: '#ffffff',  // Couleur de la bordure des tranches
+                  width: 2.5  // Largeur de la bordure des tranches
+                },
+              }
+            }];
+          }
 
         var layout = {
         //title: `Occasions - ${teamName}`,  // Titre dynamique avec le nom de l'équipe
@@ -297,18 +344,13 @@
           },
           legend:{
             orientation:'h',
-            y:1,
+            y:1.2,
           }
         };
 
         Plotly.newPlot('situations-pie-chart-section', data, layout);
         }
 
-      // Exemple d'utilisation
-      //generatePieChart('table-situations', teamName);
-
-      // Appeler la fonction de génération du Pie Chart au chargement de la page
-      //document.addEventListener('DOMContentLoaded', generatePieChart);
     });
   </script>
 
